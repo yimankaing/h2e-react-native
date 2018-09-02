@@ -1,6 +1,6 @@
 {
   "name": "h2e-react-native",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Reusable components, configs, libs, constants for h2e-projects",
   "main": "index.js",
   "scripts": {
