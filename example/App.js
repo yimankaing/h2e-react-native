@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Button, ScrollView} from 'react-native';
-import {AlertModal, Button as MyButton, ActionSheetModal} from 'h2e-react-native/components';
+import {AlertModal, Button as MyButton, ActionSheetModal, Modal, Badge} from 'h2e-react-native/components';
 import {Colors, Fonts} from 'h2e-react-native/constants';
 import {Toast} from 'h2e-react-native/libs';
 
@@ -40,6 +40,9 @@ export default class App extends Component {
     };
     this.refs.actionSheetModal.show(context);
   };
+  showModal = () => {
+    this.refs.modal.show();
+  };
 
   render() {
     return (
@@ -48,6 +51,8 @@ export default class App extends Component {
         <Button onPress={this.showAlertModal} title={"Show modal"}/>
         <Button onPress={this.showToastNative} title={"Toast Native"}/>
         <Button onPress={this.showActionSheet} title={"Show action sheet"}/>
+        <Button onPress={this.showModal} title={"Show Modal"}/>
+        <Badge type={"success"} text={"40"}/>
         <MyButton
           background={Colors.success}
           roundedSquare
@@ -59,6 +64,9 @@ export default class App extends Component {
         />
         <AlertModal ref={"alertModal"}/>
         <ActionSheetModal ref={"actionSheetModal"} cancelText={"បោះបង់"}/>
+        <Modal ref={"modal"} position={'center'}>
+          <Text>This is modal content</Text>
+        </Modal>
       </ScrollView>
     );
   }

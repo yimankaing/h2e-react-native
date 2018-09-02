@@ -1,16 +1,33 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {View, Text} from 'react-native';
 import {Colors, Fonts} from "../../constants";
 
 export default class extends React.Component {
-  render() {
-    const {success, danger, warning, info, text, style} = this.props;
-    const val = text || '0';
-    const color = success ? Colors.success :
-      danger ? Colors.danger :
-        warning ? Colors.warning :
-          info ? Colors.info : Colors.primary;
+  static propTypes = {
+    text: PropTypes.string,
+    style: PropTypes.object,
+    type: PropTypes.string
+  };
 
+  render() {
+    const {text, style, type} = this.props;
+    let color = Colors.primary
+    switch (type) {
+      case 'success':
+        color = Colors.success;
+        break;
+      case 'danger':
+        color = Colors.danger;
+        break;
+      case 'warning':
+        color = Colors.warning;
+        break;
+      case 'info':
+        color = Colors.info;
+        break;
+    }
+    const val = text || "0";
     return (
       <View style={{
         ...style,
