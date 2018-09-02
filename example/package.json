@@ -7,7 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "h2e-react-native": "../",
+    "h2e-react-native": "../h2e-react-native/",
     "prop-types": "^15.6.2",
     "react": "16.4.1",
     "react-native": "0.56.0",
