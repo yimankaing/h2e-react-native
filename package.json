@@ -1,14 +1,15 @@
 {
   "name": "h2e-react-native",
-  "version": "1.0.3",
+  "version": "1.0.8",
   "description": "Reusable components, configs, libs, constants for h2e-projects",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "h2e"
+    "h2e",
+    "h2e-react-native"
   ],
   "author": "h2e",
-  "license": "ISC"
+  "license": "MIT"
 }

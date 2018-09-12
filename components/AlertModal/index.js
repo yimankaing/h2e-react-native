@@ -1,13 +1,14 @@
 import React from 'react';
-import {View, Text, TouchableHighlight, Platform, Animated, Keyboard} from 'react-native';
+import { View, Text, TouchableHighlight, Platform, Animated, Keyboard } from 'react-native';
+import PropTypes from 'prop-types';
 import Modal from 'react-native-modal'
-import {styles} from './styles';
-import {Layout} from "../../constants";
+import { styles } from './styles';
+import { Layout, Colors } from "../../constants";
 
 const Touchable = Platform.OS === 'android' ? TouchableHighlight : TouchableHighlight;
 
 const Title = (props) => <Text numberOfLines={1}
-                               style={[styles.titleText, {color: props.headerColor}]}>{props.title}</Text>;
+  style={[styles.titleText, { color: props.headerColor }]}>{props.title}</Text>;
 const Message = (props) =>
   <Text style={styles.messageText}>{props.message}</Text>;
 
@@ -16,25 +17,43 @@ const Button = (props) => {
   const buttonsContainerStyle = buttonsLength === 1 ? styles.oneButtonContainer :
     buttonsLength === 2 ? styles.twoButtonsContainer :
       buttonsLength >= 3 ? styles.threeButtonsContainer : null;
+
   if (buttonsLength > 0) {
+    const createButtonStyles = (i) => {
+      if (buttonsLength === 1) {
+        if (props.squared) {
+          return [{ borderRadius: 0 }];
+        } else {
+          return [styles.borderBottomLeftRadius, styles.borderBottomRightRadius];
+        }
+      } else if (buttonsLength === 2) {
+        if (props.squared) {
+          return [{ borderRadius: 0, borderRightWidth: i === 0 ? 1 : 0 }]
+        } else {
+          return i === 0 ? [styles.borderBottomLeftRadius, { borderRightWidth: 1 }] : [styles.borderBottomRightRadius]
+        }
+      }
+      if (buttonsLength >= 3) {
+        if (props.squared) {
+          return [{ borderRadius: 0 }]
+        } else {
+          return i === buttonsLength - 1 ? [styles.borderBottomLeftRadius, styles.borderBottomRightRadius] : []
+        }
+      }
+    }
+
     return props.buttons.map((o, i) => {
       return (
         <Touchable
           key={i}
           underlayColor="#EFEFEF"
-          style={[
-            buttonsContainerStyle,
-            buttonsLength === 1 ? [styles.borderBottomLeftRadius, styles.borderBottomRightRadius] :
-              buttonsLength === 2 ? [
-                  i === 0 ? [styles.borderBottomLeftRadius, {borderRightWidth: 1}] : [styles.borderBottomRightRadius, {borderRightWidth: 0}]
-                ] :
-                buttonsLength >= 3 && i === buttonsLength - 1 ? [styles.borderBottomLeftRadius, styles.borderBottomRightRadius] : null
-          ]}
+          style={[buttonsContainerStyle, ...createButtonStyles(i)]}
           onPress={() => o.onPress(() => props.dismiss())}
         >
           <View>
-            <View pointerEvents="none">
-              <Text style={styles.buttonText}>{o.text}</Text>
+            <View pointerEvents="none" style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+              {o.icon}
+              <Text style={[styles.buttonText, { color: o.color || Colors.primary, paddingLeft: o.icon ? 12 : 0 }]}>{o.text}</Text>
             </View>
           </View>
         </Touchable>
@@ -44,6 +63,15 @@ const Button = (props) => {
 };
 
 class AlertModal extends React.PureComponent {
+  static propTypes = {
+    squared: PropTypes.bool,
+    titleAlignment: PropTypes.string,
+    messageAlignment: PropTypes.string,
+    animationIn: PropTypes.any,
+    animationInTiming: PropTypes.number,
+    animationOut: PropTypes.any,
+    animationOutTiming: PropTypes.number
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -51,7 +79,7 @@ class AlertModal extends React.PureComponent {
       headerColor: "#000",
       headerBackgroundColor: "transparent",
       message: '',
-      buttons: [],
+      buttons: [], //onPress-color-icon-text
       openAlertModal: false,
     };
     this.animatedY = new Animated.Value(0);
@@ -84,14 +112,14 @@ class AlertModal extends React.PureComponent {
   };
 
   render() {
-    const {animationIn, animationInTiming, animationOut, animationOutTiming} = this.props;
-    const {headerColor, headerBackgroundColor, title, message, buttons, openAlertModal} = this.state;
+    const { animationIn, animationInTiming, animationOut, animationOutTiming, squared, titleAlignment, messageAlignment } = this.props;
+    const { headerColor, headerBackgroundColor, title, message, buttons, openAlertModal } = this.state;
     const buttonsLength = buttons.length;
 
     const animatedStyle = {
       scrollY: {
         transform: [
-          {translateY: this.animatedY},
+          { translateY: this.animatedY },
         ],
       }
     };
@@ -162,37 +190,43 @@ class AlertModal extends React.PureComponent {
         animationOut={animationOut ? animationOut : animOut}
         animationOutTiming={animationOutTiming ? animationOutTiming : 250}
         supportedOrientations={['portrait']}
-        // onOrientationChange={}
+      // onOrientationChange={}
       >
         <Animated.View style={[styles.mainContainer, animatedStyle.scrollY]}>
           {
             Platform.OS === 'ios' ?
-              <View style={styles.modalBackground}/> :
-              <View style={styles.modalBackground}/>
+              <View style={[styles.modalBackground, squared ? { borderRadius: 0 } : null]} /> :
+              <View style={[styles.modalBackground, squared ? { borderRadius: 0 } : null]} />
           }
 
-          <View style={styles.modalContainer}>
+          <View style={[styles.modalContainer, { borderRadius: 0 }]}>
             {
               title ?
-                <View style={[styles.titleContainer, {backgroundColor: headerBackgroundColor}]}>
+                <View style={[styles.titleContainer, {
+                  alignItems: titleAlignment || 'center',
+                  backgroundColor: headerBackgroundColor,
+                  borderTopLeftRadius: squared ? 0 : 13,
+                  borderTopRightRadius: squared ? 0 : 13
+                }
+                ]}>
                   <Title title={title}
-                         headerColor={headerColor}
+                    headerColor={headerColor}
                   />
                 </View>
                 :
                 null
             }
-            <View style={[styles.messageContainer]}>
+            <View style={[styles.messageContainer, { alignItems: messageAlignment || 'center', }]}>
 
-              {this.props.children ? this.props.children : <Message message={message}/>}
+              {this.props.children ? this.props.children : <Message message={message} />}
             </View>
             <View style={styles.buttonsContainer}>
               <View style={
-                buttonsLength === 2 ? {flex: 0, flexDirection: 'row'} :
-                  buttonsLength === 1 ? {flex: 0, flexDirection: 'row'} :
-                    {flex: 0, flexDirection: 'column', width: '100%'}
+                buttonsLength === 2 ? { flex: 0, flexDirection: 'row' } :
+                  buttonsLength === 1 ? { flex: 0, flexDirection: 'row' } :
+                    { flex: 0, flexDirection: 'column', width: '100%' }
               }>
-                <Button buttons={buttons} dismiss={this.dismiss}/>
+                <Button buttons={buttons} dismiss={this.dismiss} squared={squared} />
               </View>
             </View>
           </View>
@@ -201,7 +235,7 @@ class AlertModal extends React.PureComponent {
     );
   }
 
-  alert = ({headerColor = "#000", headerBackgroundColor = "transparent", title, message, buttons}) => {
+  alert = ({ headerColor = "#000", headerBackgroundColor = "transparent", title, message, buttons }) => {
     this.setState({
       headerColor: headerColor,
       headerBackgroundColor: headerBackgroundColor || this.state.headerBackgroundColor,
@@ -209,7 +243,7 @@ class AlertModal extends React.PureComponent {
       openAlertModal: true,
     })
   };
-  dismiss = () => this.setState({openAlertModal: false});
+  dismiss = () => this.setState({ openAlertModal: false });
 }
 
 export default AlertModal;

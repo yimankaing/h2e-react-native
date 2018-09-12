@@ -6,6 +6,7 @@ import H2Eicon from './H2Eicon';
 import {Button, IconButton} from './Button';
 import TouchableItem from './TouchableItem'; //for drawer
 import {List, ListItem, Divider, Left, Right, Body} from "./ListIOS";
+import Spinner from './Spinner';
 
 
 export {
@@ -16,5 +17,6 @@ export {
   Button, IconButton,
   TouchableItem,
   H2Eicon,
-  List, ListItem, Divider, Left, Right, Body
+  List, ListItem, Divider, Left, Right, Body,
+  Spinner
 }

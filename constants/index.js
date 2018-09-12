@@ -1,49 +1,34 @@
-import {Dimensions, Platform, StatusBar} from 'react-native';
+import { Dimensions, Platform, StatusBar } from 'react-native';
 
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
-const {height: D_HEIGHT, width: D_WIDTH} = Dimensions.get('window');
+const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get('window');
 
-const isIPhoneX =
-  Platform.OS === 'ios' && (D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH);
+const isIPhoneX = Platform.OS === 'ios' && (D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH);
 const notchHeight = isIPhoneX ? 20 : 0;
 
 const isSmallDevice = D_WIDTH < 357;
 
-const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
-const statusBar = Platform.OS === 'ios' ? 20 :
-  Platform.OS === 'android' && Platform.Version >= 20 ? 24 : 0;
-// const statusBar = StatusBar.currentHeight;
-const header = 192;
-const appBarHeight = APPBAR_HEIGHT;
-const largeTopBarHeight = 70;
-const searchBoxHeight = 36;
 export const Layout = {
   window: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
   notchHeight,
-  isSmallDevice,
-  headerHeight: Platform.OS === 'android' ? APPBAR_HEIGHT : APPBAR_HEIGHT + notchHeight,
-  statusbarHeight: statusBar,
+  statusbarHeight: Platform.OS === 'ios' ? 20 :
+    Platform.OS === 'android' && Platform.Version >= 20 ? 24 : 0,
   orientation: (this.window.width > this.window.height) ? 'LANDSCAPE' : 'PORTRAIT',
-  header: header - statusBar,
-  appBarHeight: appBarHeight,
-  largeTopBarHeight: largeTopBarHeight,
-  searchBarHeight: header - appBarHeight - largeTopBarHeight - statusBar,
-  searchBoxHeight: searchBoxHeight
+  appBarHeight: Platform.OS === 'ios' ? 44 : 56,
 };
 
 export const Fonts = {
-  bold: null,
+  bold: 'Battambang-Bold',
   regular: 'Battambang',
-  appBar: null
-  // battambang: 'Battambang',
-  // battambangBold: 'Battambang-Bold',
-  // khpreyveng: 'KhPreyVeng',
-  // moul: 'Moul',
-  // wbIcon: Platform.OS === 'android' ? 'WBIcon' : 'icomoon'
+  battambang: 'Battambang',
+  battambangBold: 'Battambang-Bold',
+  khpreyveng: 'KhPreyVeng',
+  moul: 'Moul',
+  wbIcon: Platform.OS === 'android' ? 'WBIcon' : 'icomoon'
 };
 
 export const Colors = {
@@ -75,85 +60,39 @@ export const Colors = {
 };
 
 export const FontSizes = {
-  title: isSmallDevice ? 16 : 18,
-  invoiceDetailFontSize: isSmallDevice ? 16 : 18,
-  subtitle: isSmallDevice ? 14 : 16,
-  bodyLarge: 14,
-  bodyTitle: isSmallDevice ? 14 : 15,
-  normalButton: isSmallDevice ? 15 : 16,
-  appBarIconSize: 26,
-  smallTitle: 17,
-  largeTitle: 27
+  normal: Platform.OS === 'android' ? 15 : 17,
+  title: Platform.OS === 'android' ? 16 : 18,
+  subtitle: Platform.OS === 'android' ? 14 : 16,
 };
 
-export const ToastStyles = (type) => {
-  let background = Colors.black();
+export const ToastStyles = (type, background) => {
+  let bg = background ? background : "#000000";
   switch (type) {
     case 'success':
-      background = Colors.success;
+      bg = Colors.success;
       break;
     case 'danger':
-      background = Colors.danger;
+      bg = Colors.danger;
       break;
     case 'warning':
-      background = Colors.warning;
+      bg = Colors.warning;
       break;
     case 'info':
-      background = Colors.info;
+      bg = Colors.info;
       break;
     default:
       break;
   }
   return {
-    backgroundColor: background,
-    width: 300,
+    backgroundColor: bg,
+    width: 350,
     height: Platform.OS === "ios" ? 50 : 130,
     color: "#ffffff",
-    fontSize: 15,
-    lineHeight: 2,
+    fontSize: 16,
+    lineHeight: 4,
     // lines: 4,
-    borderRadius: 15,
+    borderRadius: Platform.OS === 'ios' ? 15 : 35,
     // fontWeight: "bold",
     yOffset: 70
   }
 };
-
-
-// export const Images = {
-  // background: require('../assets/images/background.png'),
-  // app_icon: require('../assets/images/app_icon.png'),
-// };
-
-// export const Metrics = {
-//   marginHorizontal: 10,
-//   marginVertical: 10,
-//   section: 25,
-//   baseMargin: 10,
-//   doubleBaseMargin: 20,
-//   smallMargin: 5,
-//   doubleSection: 50,
-//   horizontalLineHeight: 1,
-//   navBarHeight: (Platform.OS === 'ios') ? 64 : 54,
-//   buttonRadius: 4,
-//   icons: {
-//     tiny: 15,
-//     small: 20,
-//     medium: 30,
-//     large: 45,
-//     xl: 50
-//   },
-//   images: {
-//     small: 20,
-//     medium: 40,
-//     large: 60,
-//     logo: 200
-//   }
-// };
-
-// const pjson = require('../../package.json');
-// export const PJson = {
-//   appName: pjson.appName,
-//   version: pjson.version,
-//   address: 'បាត់ដំបង',
-//   phone: '012 345 678'
-// };

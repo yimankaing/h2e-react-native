@@ -1,5 +1,5 @@
-import {Dimensions, PixelRatio, StyleSheet, Platform} from "react-native";
-import {Layout, Fonts, Colors} from "../../constants";
+import { Dimensions, PixelRatio, StyleSheet, Platform } from "react-native";
+import { Layout, Fonts, Colors } from "../../constants";
 
 const platform = Platform.OS;
 
