@@ -13,16 +13,16 @@ export default class App extends Component {
       headerColor: Colors.white(),
       headerBackgroundColor: Colors.primary,
       buttons: [
-        {
-          text: "OK", onPress: fn => {
-            return fn();
-          }
-        },
-        {
-          text: "OK", onPress: fn => {
-            return fn();
-          }
-        },
+        // {
+        //   text: "OK", onPress: fn => {
+        //     return fn();
+        //   }
+        // },
+        // {
+        //   text: "OK", onPress: fn => {
+        //     return fn();
+        //   }
+        // },
         {
           icon: <Icon name={"check"} size={23} color={"red"} />,
           text: "OK",
@@ -76,7 +76,7 @@ export default class App extends Component {
           iconComponent="Feather"
           onPress={() => null}
         />
-        <AlertModal ref={"alertModal"} squared={false} titleAlignment={"flex-start"} messageAlignment={"flex-end"}/>
+        <AlertModal ref={"alertModal"} squared={true} titleAlignment={"flex-start"} messageAlignment={"flex-end"}/>
         <ActionSheetModal ref={"actionSheetModal"} cancelText={"បោះបង់"} />
         <Modal ref={"modal"} position={'center'}>
           <Text>This is modal content</Text>

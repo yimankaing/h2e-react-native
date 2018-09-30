@@ -13,6 +13,7 @@ const Message = (props) =>
   <Text style={styles.messageText}>{props.message}</Text>;
 
 const Button = (props) => {
+  const radiusSize = props.radiusSize || 0;
   const buttonsLength = props.buttons.length;
   const buttonsContainerStyle = buttonsLength === 1 ? styles.oneButtonContainer :
     buttonsLength === 2 ? styles.twoButtonsContainer :
@@ -22,20 +23,20 @@ const Button = (props) => {
     const createButtonStyles = (i) => {
       if (buttonsLength === 1) {
         if (props.squared) {
-          return [{ borderRadius: 0 }];
+          return [{ borderBottomLeftRadius: radiusSize, borderBottomRightRadius: radiusSize }];
         } else {
           return [styles.borderBottomLeftRadius, styles.borderBottomRightRadius];
         }
       } else if (buttonsLength === 2) {
         if (props.squared) {
-          return [{ borderRadius: 0, borderRightWidth: i === 0 ? 1 : 0 }]
+          return i === 0 ? [{ borderRightWidth: 1, borderBottomLeftRadius: radiusSize }] : [{ borderBottomRightRadius: radiusSize }]
         } else {
           return i === 0 ? [styles.borderBottomLeftRadius, { borderRightWidth: 1 }] : [styles.borderBottomRightRadius]
         }
       }
       if (buttonsLength >= 3) {
         if (props.squared) {
-          return [{ borderRadius: 0 }]
+          return i === buttonsLength - 1 ? [{ borderBottomLeftRadius: radiusSize, borderBottomRightRadius: radiusSize }] : []
         } else {
           return i === buttonsLength - 1 ? [styles.borderBottomLeftRadius, styles.borderBottomRightRadius] : []
         }
@@ -65,6 +66,7 @@ const Button = (props) => {
 class AlertModal extends React.PureComponent {
   static propTypes = {
     squared: PropTypes.bool,
+    radiusSize: PropTypes.number,
     titleAlignment: PropTypes.string,
     messageAlignment: PropTypes.string,
     animationIn: PropTypes.any,
@@ -113,6 +115,7 @@ class AlertModal extends React.PureComponent {
 
   render() {
     const { animationIn, animationInTiming, animationOut, animationOutTiming, squared, titleAlignment, messageAlignment } = this.props;
+    const radiusSize = this.props.radiusSize || 0;
     const { headerColor, headerBackgroundColor, title, message, buttons, openAlertModal } = this.state;
     const buttonsLength = buttons.length;
 
@@ -195,18 +198,18 @@ class AlertModal extends React.PureComponent {
         <Animated.View style={[styles.mainContainer, animatedStyle.scrollY]}>
           {
             Platform.OS === 'ios' ?
-              <View style={[styles.modalBackground, squared ? { borderRadius: 0 } : null]} /> :
-              <View style={[styles.modalBackground, squared ? { borderRadius: 0 } : null]} />
+              <View style={[styles.modalBackground, squared ? { borderRadius: radiusSize } : null]} /> :
+              <View style={[styles.modalBackground, squared ? { borderRadius: radiusSize } : null]} />
           }
 
-          <View style={[styles.modalContainer, { borderRadius: 0 }]}>
+          <View style={[styles.modalContainer, { borderRadius: radiusSize }]}>
             {
               title ?
                 <View style={[styles.titleContainer, {
                   alignItems: titleAlignment || 'center',
                   backgroundColor: headerBackgroundColor,
-                  borderTopLeftRadius: squared ? 0 : 13,
-                  borderTopRightRadius: squared ? 0 : 13
+                  borderTopLeftRadius: squared ? radiusSize : 13,
+                  borderTopRightRadius: squared ? radiusSize : 13
                 }
                 ]}>
                   <Title title={title}
@@ -226,7 +229,7 @@ class AlertModal extends React.PureComponent {
                   buttonsLength === 1 ? { flex: 0, flexDirection: 'row' } :
                     { flex: 0, flexDirection: 'column', width: '100%' }
               }>
-                <Button buttons={buttons} dismiss={this.dismiss} squared={squared} />
+                <Button buttons={buttons} dismiss={this.dismiss} squared={squared} radiusSize={radiusSize} />
               </View>
             </View>
           </View>
