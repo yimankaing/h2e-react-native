@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import RNModal from "react-native-modal";
-import {SafeAreaView} from 'react-navigation';
-import {View, StyleSheet, TouchableWithoutFeedback} from "react-native";
-import {Layout} from "../../constants";
+import { SafeAreaView } from 'react-navigation';
+import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { Layout } from "../../constants";
 
 export default class Modal extends React.PureComponent {
   constructor(props) {
@@ -14,9 +14,9 @@ export default class Modal extends React.PureComponent {
   }
 
   render() {
-    const {visibleModal} = this.state;
+    const { visibleModal } = this.state;
     const position = this.props.position === 'center' ? 'center' : this.props.position === 'top' ? 'flex-start' : 'flex-end';
-    const {backdropOpacity, animationIn, animationOut} = this.props;
+    const { backdropOpacity, animationIn, animationOut } = this.props;
     const defaultStyles = {
       backgroundColor: '#fff',
       justifyContent: 'center',
@@ -29,18 +29,18 @@ export default class Modal extends React.PureComponent {
     return (
       <View>
         <RNModal isVisible={visibleModal}
-                 backdropOpacity={backdropOpacity || 0.3}
-                 animationIn={animationIn || "fadeIn"}
+          backdropOpacity={backdropOpacity || 0.3}
+          animationIn={animationIn || "fadeIn"}
           // animationInTiming={180}
-                 animationOut={animationOut || "fadeOut"}
-                 style={{
-                   margin: 0,
-                   justifyContent: position,
-                 }}
-                 onBackdropPress={() => this.hide()}
-                 onBackButtonPress={() => this.hide()}>
+          animationOut={animationOut || "fadeOut"}
+          style={{
+            margin: 0,
+            justifyContent: position,
+          }}
+          onBackdropPress={() => this.onBackdropPress()}
+          onBackButtonPress={() => this.onBackButtonPress()}>
           <SafeAreaView
-            forceInset={{top: 'always', bottom: 'always'}}
+            forceInset={{ top: 'always', bottom: 'always' }}
             style={[defaultStyles, this.props.style]}>
             {this.props.children}
           </SafeAreaView>
@@ -50,11 +50,17 @@ export default class Modal extends React.PureComponent {
   }
 
   show = () => {
-    this.setState({visibleModal: true});
+    this.setState({ visibleModal: true });
   };
-  hide = () => {
-    this.setState({visibleModal: false});
-  }
+	hide = () => {
+		this.setState({ visibleModal: false });
+	};
+  onBackdropPress = () => {
+    this.setState({ visibleModal: false }, () => this.props.onBackdropPress ? this.props.onBackdropPress() : null);
+  };
+  onBackButtonPress = () => {
+    this.setState({ visibleModal: false }, () => this.props.onBackButtonPress ? this.props.onBackButtonPress() : null);
+  };
 }
 
 Modal.propTypes = {
@@ -62,5 +68,7 @@ Modal.propTypes = {
   backdropOpacity: PropTypes.number,
   animationIn: PropTypes.string,
   animationOut: PropTypes.string,
-  style: PropTypes.any
+  style: PropTypes.any,
+  onBackdropPress: PropTypes.func,
+  onBackButtonPress: PropTypes.func
 };

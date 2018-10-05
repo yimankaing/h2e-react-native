@@ -72,7 +72,8 @@ class AlertModal extends React.PureComponent {
     animationIn: PropTypes.any,
     animationInTiming: PropTypes.number,
     animationOut: PropTypes.any,
-    animationOutTiming: PropTypes.number
+    animationOutTiming: PropTypes.number,
+    allowOutSideClick: PropTypes.bool,
   };
   constructor(props) {
     super(props);
@@ -114,7 +115,7 @@ class AlertModal extends React.PureComponent {
   };
 
   render() {
-    const { animationIn, animationInTiming, animationOut, animationOutTiming, squared, titleAlignment, messageAlignment } = this.props;
+    const { animationIn, animationInTiming, animationOut, animationOutTiming, squared, titleAlignment, messageAlignment, allowOutSideClick } = this.props;
     const radiusSize = this.props.radiusSize || 0;
     const { headerColor, headerBackgroundColor, title, message, buttons, openAlertModal } = this.state;
     const buttonsLength = buttons.length;
@@ -186,7 +187,7 @@ class AlertModal extends React.PureComponent {
         isVisible={openAlertModal}
         // style={[styles.modal]}
         onBackButtonPress={this.dismiss}
-        onBackdropPress={this.props.allowOutSideClick ? this.dismiss : null}
+        onBackdropPress={allowOutSideClick ? this.dismiss : null}
         backdropOpacity={0.4}
         animationIn={animationIn ? animationIn : animIn}
         animationInTiming={animationInTiming ? animationInTiming : 250}
