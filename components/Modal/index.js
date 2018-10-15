@@ -16,7 +16,7 @@ export default class Modal extends React.PureComponent {
   render() {
     const { visibleModal } = this.state;
     const position = this.props.position === 'center' ? 'center' : this.props.position === 'top' ? 'flex-start' : 'flex-end';
-    const { backdropOpacity, animationIn, animationOut } = this.props;
+    const { backdropOpacity, animationIn, animationOut, avoidKeyboard, onBackdropPress, onBackButtonPress } = this.props;
     const defaultStyles = {
       backgroundColor: '#fff',
       justifyContent: 'center',
@@ -37,8 +37,9 @@ export default class Modal extends React.PureComponent {
             margin: 0,
             justifyContent: position,
           }}
-          onBackdropPress={() => this.onBackdropPress()}
-          onBackButtonPress={() => this.onBackButtonPress()}>
+          avoidKeyboard={avoidKeyboard}
+          onBackdropPress={onBackdropPress || this.hide}
+          onBackButtonPress={onBackButtonPress || this.hide}>
           <SafeAreaView
             forceInset={{ top: 'always', bottom: 'always' }}
             style={[defaultStyles, this.props.style]}>
@@ -52,23 +53,24 @@ export default class Modal extends React.PureComponent {
   show = () => {
     this.setState({ visibleModal: true });
   };
-	hide = () => {
-		this.setState({ visibleModal: false });
-	};
-  onBackdropPress = () => {
-    this.setState({ visibleModal: false }, () => this.props.onBackdropPress ? this.props.onBackdropPress() : null);
+  hide = () => {
+    this.setState({ visibleModal: false });
   };
-  onBackButtonPress = () => {
-    this.setState({ visibleModal: false }, () => this.props.onBackButtonPress ? this.props.onBackButtonPress() : null);
-  };
+  // onBackdropPress = () => {
+  //   this.setState({ visibleModal: false }, () => this.props.onBackdropPress ? this.props.onBackdropPress() : null);
+  // };
+  // onBackButtonPress = () => {
+  //   this.setState({ visibleModal: false }, () => this.props.onBackButtonPress ? this.props.onBackButtonPress() : null);
+  // };
 }
 
 Modal.propTypes = {
-  position: PropTypes.string,
+  position: PropTypes.oneOf(['top', 'center']),
   backdropOpacity: PropTypes.number,
   animationIn: PropTypes.string,
   animationOut: PropTypes.string,
   style: PropTypes.any,
   onBackdropPress: PropTypes.func,
-  onBackButtonPress: PropTypes.func
+  onBackButtonPress: PropTypes.func,
+  avoidKeyboard: PropTypes.bool
 };
